@@ -108,6 +108,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
             }
             map.put(s, count);
             }
+
         return map;
     }
 
@@ -135,5 +136,4 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
             System.out.println("Указан неверный параметр сортировки");
             return list;}
     }
-
 }

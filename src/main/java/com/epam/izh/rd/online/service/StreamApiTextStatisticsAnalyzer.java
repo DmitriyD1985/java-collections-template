@@ -2,6 +2,7 @@ package com.epam.izh.rd.online.service;
 
 import com.epam.izh.rd.online.helper.Direction;
 
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,17 +39,17 @@ public class StreamApiTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
                 .map(elem -> new String(elem))
                 .collect(Collectors.toList());
 
+
     }
     @Override
     public Set<String> getUniqueWords(String text) {
         return new HashSet<>(getWords(text));
-    }
 
+    }
     @Override
     public Map<String, Integer> countNumberOfWordsRepetitions(String text) {
         return  getWords(text).stream().collect(Collectors.toConcurrentMap(
                         w -> w, w -> 1, Integer::sum));
-
     }
 
     @Override
