@@ -2,6 +2,7 @@ package com.epam.izh.rd.online.service;
 
 import com.epam.izh.rd.online.helper.Direction;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static java.util.Collections.*;
@@ -23,7 +24,13 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countSumLengthOfWords(String text) {
-        return 0;
+
+        List<String> list = getWords(text);
+        StringBuilder sb = new StringBuilder();
+        for (String s: list) {
+            sb.append(s);
+        }
+        return sb.toString().length();
     }
 
     /**
@@ -34,7 +41,8 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfWords(String text) {
-        return 0;
+
+        return getWords(text).size();
     }
 
     /**
@@ -43,8 +51,9 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      * param text текст
      */
     @Override
-    public int countNumberOfUniqueWords(String text) {
-        return 0;
+    public int countNumberOfUniqueWords(String text)
+    {
+        return getUniqueWords(text).size();
     }
 
     /**
@@ -57,7 +66,14 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> getWords(String text) {
-        return emptyList();
+        text.replaceAll(System.lineSeparator(), " ");
+        String [] arr = text.split("\\P{Alpha}+");
+        List<String> list = new ArrayList<>();
+        for (String s :arr) {
+            if(!s.isEmpty()){
+                list.add(s);}
+        }
+        return list;
     }
 
     /**
@@ -70,7 +86,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Set<String> getUniqueWords(String text) {
-        return emptySet();
+       return new HashSet<>(getWords(text));
     }
 
     /**
@@ -82,7 +98,17 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Map<String, Integer> countNumberOfWordsRepetitions(String text) {
-        return emptyMap();
+        HashMap <String, Integer> map = new HashMap<>();
+        Set<String> set = getUniqueWords(text);
+        List<String> list = getWords(text);
+        for (String s: set) {
+            int count=0;
+            for (String l: list) {
+                if(s.equals(l)){count++;}
+            }
+            map.put(s, count);
+            }
+        return map;
     }
 
     /**
@@ -95,6 +121,19 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> sortWordsByLength(String text, Direction direction) {
-        return emptyList();
+        List<String> list = getWords(text);
+        if(direction.equals(Direction.ASC)){
+            list.sort((first, second) -> Integer.compare(first.length(), second.length()));
+            return list;
+        }
+        else if (direction.equals(Direction.DESC))
+        {
+            list.sort((first, second) -> Integer.compare(second.length(), first.length()));
+            return list;
+        }
+        else {
+            System.out.println("Указан неверный параметр сортировки");
+            return list;}
     }
+
 }
