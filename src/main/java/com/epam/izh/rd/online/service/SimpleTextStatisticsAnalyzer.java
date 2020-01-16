@@ -2,6 +2,7 @@ package com.epam.izh.rd.online.service;
 
 import com.epam.izh.rd.online.helper.Direction;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static java.util.Collections.*;
@@ -65,10 +66,13 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> getWords(String text) {
-        StringBuilder sb = new StringBuilder();
-        text.replace("\\p{Punct}", "");
-        text.replace("\\s+", " ");
-        List<String> list = Arrays.asList(text.split(" "));
+        text.replaceAll(System.lineSeparator(), " ");
+        String [] arr = text.split("\\P{Alpha}+");
+        List<String> list = new ArrayList<>();
+        for (String s :arr) {
+            if(!s.isEmpty()){
+                list.add(s);}
+        }
         return list;
     }
 
@@ -96,15 +100,15 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
     public Map<String, Integer> countNumberOfWordsRepetitions(String text) {
         HashMap <String, Integer> map = new HashMap<>();
         Set<String> set = getUniqueWords(text);
+        List<String> list = getWords(text);
         for (String s: set) {
-            int i = text.indexOf(s);
-            int count = 0;
-            while (i >= 0) {
-                count++;
-                i = text.indexOf(s, i + 1);
+            int count=0;
+            for (String l: list) {
+                if(s.equals(l)){count++;}
             }
-           map.put(s, count);
-        }
+            map.put(s, count);
+            }
+
         return map;
     }
 
@@ -119,11 +123,11 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
     @Override
     public List<String> sortWordsByLength(String text, Direction direction) {
         List<String> list = getWords(text);
-        if(direction == Direction.DESC){
+        if(direction.equals(Direction.ASC)){
             list.sort((first, second) -> Integer.compare(first.length(), second.length()));
             return list;
         }
-        else if (direction == Direction.ASC)
+        else if (direction.equals(Direction.DESC))
         {
             list.sort((first, second) -> Integer.compare(second.length(), first.length()));
             return list;
@@ -132,5 +136,4 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
             System.out.println("Указан неверный параметр сортировки");
             return list;}
     }
-
 }
